@@ -13,6 +13,6 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 bot = Bot(command_prefix=".")
 
-bot.load_extension("commands.roles")
+bot.load_extension("cog.roles")
 
 bot.run(TOKEN)

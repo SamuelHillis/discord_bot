@@ -7,15 +7,8 @@ from discord.ext.commands import (
 )
 
 from bot import Bot
+from constants import conn
 
-conn = sqlite3.connect("bot/resources/data.db")
-
-conn.cursor().execute("""
-        CREATE TABLE IF NOT EXISTS Roles (
-            RoleID INTEGER PRIMARY KEY,
-            GuildID INTEGER NOT NULL
-        ); 
-""")
 
 def getRole(ctx, roleName):
     return discord.utils.get(
@@ -112,4 +105,10 @@ class Roles(Cog):
 
 
 def setup(bot: Bot) -> None:
+    conn.cursor().execute("""
+            CREATE TABLE IF NOT EXISTS Roles (
+                RoleID INTEGER PRIMARY KEY,
+                GuildID INTEGER NOT NULL
+            ); 
+    """)
     bot.add_cog(Roles(bot))

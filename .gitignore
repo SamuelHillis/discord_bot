@@ -1,5 +1,6 @@
-defunct/
-*.db
 *.env
 *.pyc
 *.pyo
+
+storage.db
+defunct/
