@@ -1,5 +1,5 @@
 defunct/
-bot/resources/data.db
-bot/.env
+*.db
+*.env
 *.pyc
 *.pyo
