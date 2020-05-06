@@ -1,0 +1,5 @@
+defunct/
+bot/resources/data.db
+bot/.env
+*.pyc
+*.pyo
