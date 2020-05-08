@@ -34,19 +34,19 @@ class Roles(Cog):
             return
 
         cur = conn.cursor()
-        cur.execute(f"""SELECT * FROM Roles WHERE RoleID == {role.id}'""")
+        cur.execute("SELECT * FROM Roles WHERE RoleID == {role.id}'")
 
         if (len(cur.fetchall()) > 0):
             cur.execute(f"""
                 DELETE FROM Roles
-                WHERE RoleID == {role.id};
-            """)
+                WHERE RoleID == ?
+            """, (role.id,))
             await ctx.send(f"Removed {role} from the common roles")
         else:
-            cur.execute(f"""
-                INSERT INTO Roles (RoleID, GuildID, Authority)
-                VALUES ({role.id}, {ctx.guild.id})
-            """)
+            cur.execute("""
+                INSERT INTO Roles (RoleID, GuildID, Authority) VALUES 
+                (?, ?)
+            """, (role.id, ctx.guild.id))
             await ctx.send(f"Added {role} to the common roles")
 
         conn.commit()
@@ -66,10 +66,10 @@ class Roles(Cog):
             return
 
         cur = conn.cursor()
-        cur.execute(f"""
+        cur.execute("""
             SELECT * FROM Roles
-            WHERE RoleID == {role.id};
-        """)
+            WHERE RoleID == ?;
+        """, (role.id,))
 
         if (len(cur.fetchall()) == 0):
             await ctx.send(f"I cant do anything to {role}!")
@@ -89,10 +89,10 @@ class Roles(Cog):
         guild = ctx.guild
         cur = conn.cursor()
 
-        cut.execute(f"""
+        cut.execute("""
             SELECT RoleID FROM Roles
-            WHERE GuildID == {guild.id};
-        """)
+            WHERE GuildID == ?;
+        """, (guild.id,))
 
         roleIDs = cur.fetchall()
 
