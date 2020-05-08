@@ -11,29 +11,29 @@ from bot import Bot
 from constants import conn
 
 
-def Characters(Cog):
+class Characters(Cog):
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @command(name="character")
     async def character(self, ctx, *argc):
         if (len(argc) == 0):
-            get_character(ctx.message.author)
+            await self.get_character(ctx, ctx.message.author)
             return
 
         cmd = argc.remove(0)
-        elif (cmd == "add"):
-            add_character(argc)
+        if (cmd == "add"):
+            await self.add_character(ctx, argc)
         elif (cmd == "set"):
-            set_character(argc)
+            await self.set_character(ctx, argc)
         elif (cmd == "remove"):
-            del_character(argc)
+            await self.del_character(ctx, argc)
         else:
             member = " ".join(argc)
-            get_character(member)
+            await self.get_character(ctx, member)
 
 
-    def get_character(self, member: Member):
+    async def get_character(self, ctx, member: Member):
         if (member == None):
             await ctx.send("I don't know who that is...")
             return
@@ -44,14 +44,21 @@ def Characters(Cog):
         cur.execute(f"""
             SELECT Name, Description FROM Character
             WHERE PlayerID == ?
-        """, (member.id,)
+        """, (member.id,))
 
-        out = f"{member}'s characters are:\n")
+        chars = cur.fetchall()
+        out = ""
 
-        for c in cur.fetchall():
-            out = out + "> " + c[0] + "\t" + c[1] + "\n"
+        if (len(chars) > 0):
+            out += f"{member}'s characters are:\n>>> "
 
-        await ctx.send(out[:-2])
+            for c in cur.fetchall():
+                out += c[0] + ":\n" + c[1] + "\n"
+            out = out[:-2]
+        else:
+            out += f"{member} has no characters!"
+
+        await ctx.send(out)
 
 
 def setup(bot: Bot) -> None:
@@ -63,6 +70,4 @@ def setup(bot: Bot) -> None:
                 Description TEXT    DEFAULT 'No description'
             )
     """);
-    bot.add_cog(Characters(bot))
-
-    
+    bot.add_cog(Characters(bot))    
