@@ -89,7 +89,7 @@ class Roles(Cog):
         guild = ctx.guild
         cur = conn.cursor()
 
-        cut.execute("""
+        cur.execute("""
             SELECT RoleID FROM Roles
             WHERE GuildID == ?;
         """, (guild.id,))
