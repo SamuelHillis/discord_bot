@@ -16,8 +16,8 @@ try:
 except:
     env = open(".env", 'w+')
     TOKEN = input("Enter Discord token: ")
-    env.write(f"DISCORD_TOKEN={TOKEN}")
-
+    env.write(f'DISCORD_TOKEN="{TOKEN}"')
+   
 bot = Bot(command_prefix=".")
 
 bot.load_extension("cog.character")
